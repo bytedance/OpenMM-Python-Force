@@ -1,0 +1,54 @@
+\documentclass[%
+% showframe,%
+letterpaper,%
+journal=jctcce,%
+manuscript=article]{achemso}
+\usepackage{geometry}
+\geometry{left=1.5in,right=1.5in,top=2in,bottom=2in}
+\makeatletter
+\renewcommand{\acs@maketitle@width}{\textwidth}
+\makeatother
+
+\usepackage[T1]{fontenc}
+\usepackage{libertinus}
+\renewcommand{\ttdefault}{cmtt}
+\AtBeginDocument{%
+\fontdimen3\font=0.3em% amount the space can stretch
+% \fontdimen4\font=0.2em% amount the space can shrink
+}
+\usepackage{setspace}\AtBeginDocument{\singlespacing}
+
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue,urlcolor=blue]{hyperref}
+\usepackage{subcaption}
+
+% document
+\newcommand{\torchjit}{torch\allowbreak.jit\allowbreak.script}
+\newcommand{\torchcompile}{torch\allowbreak.compile}
+
+\def\InlineFloatEnv{}
+
+\input{sec01.title.tex}
+
+\begin{document}
+
+\maketitle
+
+\input{sec05.abstract.tex}
+
+\input{sec10.intro.tex}
+
+\input{sec20.methods.tex}
+
+\input{sec30.results.tex}
+
+\input{sec80.conclude.tex}
+
+\input{sec82.acknowledge.tex}
+
+\bibliography{refs}
+
+\ifdefined\InlineFloatEnv\else
+\input{sec90.float.tex}
+\fi
+
+\end{document}

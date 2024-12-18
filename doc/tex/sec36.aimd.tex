@@ -1,0 +1,21 @@
+\subsection{Example: AIMD Simulation}
+
+The versatility of the callback mechanism extends
+beyond PyTorch tensors to accommodate diverse data containers.
+To demonstrate this flexibility,
+we implemented an AIMD simulation using PySCF/GPU4PySCF \cite{Sun2020,Wu2024,Li2024,Lehtola2018}
+with the B3LYP functional and D3BJ dispersion correction.
+The simulation utilizes \emph{NumPyForce}, an OpenMM Force plugin we developed
+alongside \emph{TorchForce} to establish a bridge
+between OpenMM and quantum chemistry software packages.
+All relevant implementation files are available on GitHub.
+
+In this quantum mechanical context,
+where automatic differentiation via backpropagation is not available,
+forces or gradients must be explicitly provided to the MD engine.
+While NumPy lacks native CUDA support,
+the overhead from device-to-device data transfer
+and floating-point conversion
+(between fp32 and fp64) proves negligible in AIMD simulations,
+where quantum chemical force calculations typically
+dominate the computational cost.

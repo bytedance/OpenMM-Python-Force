@@ -1,0 +1,8 @@
+.vscode
+build*/*
+__pycache__
+*.pyc
+*.so
+
+*.tar
+*.tar.gz

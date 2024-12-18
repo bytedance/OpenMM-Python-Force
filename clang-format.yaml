@@ -1,0 +1,18 @@
+---
+Language:                  Cpp
+BasedOnStyle:         Chromium
+ColumnLimit:               120
+MaxEmptyLinesToKeep:         1
+IndentPPDirectives:  AfterHash
+
+FixNamespaceComments:    False
+
+AccessModifierOffset:                    -2
+AllowShortFunctionsOnASingleLine:     Empty
+BreakConstructorInitializers:    AfterColon
+SpaceBeforeCtorInitializerColon:      false
+SpaceBeforeInheritanceColon:          false
+PackConstructorInitializers:          Never
+ConstructorInitializerIndentWidth:        2
+ContinuationIndentWidth:                  2
+...

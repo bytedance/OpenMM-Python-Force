@@ -1,0 +1,28 @@
+\subsection{Extensibility to Other MD Engines}
+
+The proposed callback mechanism demonstrates broad compatibility
+with other molecular dynamics engines,
+such as Tinker \cite{Rackers2018} and LAMMPS \cite{Thompson2022},
+even when these packages do not natively initialize a Python interpreter.
+Based on our implementation experience,
+incorporating a ``callback Python energy term''
+would require comparable code modifications
+in their respective source files.
+Furthermore, the initialization of the Python interpreter would necessitate
+only minimal additional changes to other components of the codebase,
+making it a straightforward extension.
+
+Taking Tinker as an example,
+initializing a Python interpreter conceptually resembles
+the initialization of a Fortran runtime library,
+as currently implemented in Tinker9 \cite{Software-Tinker9}.
+During program initialization, Tinker9 calls compiler-specific functions:
+\verb|_gfortran_set_args| for GFortran-compiled executables,
+or \verb|for_rtl_init_| and \verb|for_rtl_finish_|
+for initialization and cleanup with the Intel compiler, respectively.
+Similarly, implementing Python support would primarily involve
+incorporating CPython C-API functions
+such as \verb|Py_Initialize| and \verb|Py_Finalize|.
+For detailed implementation guidance,
+we refer readers to the official CPython documentation \cite{Software-Python-C-API}
+and pybind11's \emph{embedding the interpreter} documentation \cite{Software-pybind11-embed}.

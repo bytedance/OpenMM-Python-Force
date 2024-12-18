@@ -1,0 +1,12 @@
+\begin{table*}[htbp]
+\caption{Deployment and compilation strategies evaluated
+in ethanol simulations.}\label{tb:deploy8}
+\begin{tabular}{c|cr|cr}
+\hline
+       & No. & Description                   & No. & Description   \\\hline
+C++    & 1   & OpenMM Torch (Baseline)       & 5  & 1 + CUDA Graph \\
+Python & 2   & native \verb|torch.nn.Module| & 6  & 2 + CUDA Graph \\
+Python & 3   & \texttt{\torchjit}            & 7  & 3 + CUDA Graph \\
+Python & 4   & \texttt{\torchcompile}        & 8  & 4 + CUDA Graph \\\hline
+\end{tabular}
+\end{table*}

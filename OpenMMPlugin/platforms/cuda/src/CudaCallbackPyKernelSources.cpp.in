@@ -1,0 +1,3 @@
+#include "CudaCallbackPyKernelSources.h"
+using namespace OpenMM;
+@PROJECT_CUDA_FILE_DEFINITIONS@

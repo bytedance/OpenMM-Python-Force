@@ -1,0 +1,9 @@
+bamboo/*
+bamboo
+*.csv
+*.npz
+*.pdb
+*.pdf
+*.png
+
+!min.pdb

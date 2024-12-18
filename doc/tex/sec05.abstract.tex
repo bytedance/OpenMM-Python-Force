@@ -1,0 +1,18 @@
+\begin{abstract}
+
+We present OpenMM-Python-Force,
+a plugin designed to extend OpenMM's functionality
+by enabling integration of energy and force calculations
+from external Python programs via a callback mechanism.
+During molecular dynamics simulations,
+data exchange can be implemented through \texttt{torch.Tensor}
+or \texttt{numpy.ndarray}, depending on the specific use case.
+This enhancement significantly expands OpenMM's capabilities,
+facilitating seamless integration of accelerated Python modules
+within molecular dynamics simulations.
+This approach represents a general solution that can be adapted
+to other molecular dynamics engines beyond OpenMM.
+The source code is openly available at
+\href{https://github.com/bytedance/OpenMM-Python-Force}{https://github.com/bytedance/OpenMM-Python-Force}.
+
+\end{abstract}

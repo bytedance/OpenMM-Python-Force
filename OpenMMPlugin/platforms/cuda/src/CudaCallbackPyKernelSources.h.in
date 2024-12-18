@@ -1,0 +1,9 @@
+#pragma once
+#include <string>
+
+namespace OpenMM {
+class CudaCallbackPyKernelSources {
+public:
+  @PROJECT_CUDA_FILE_DECLARATIONS@
+};
+}

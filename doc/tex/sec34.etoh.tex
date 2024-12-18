@@ -1,0 +1,79 @@
+\subsection{Example: Ethanol}
+
+We evaluated the numerical accuracy and computational performance
+using a single ethanol molecule in vacuum,
+implementing eight distinct deployment
+and compilation strategies (Table~\ref{tb:deploy8}).
+For each strategy, we performed independent NVE simulations
+for 100 steps with a 1~fs time-step.
+All simulations utilized identical random seeds
+and initial velocities corresponding to 300~K.
+We employed the BAMBOO \cite{Gong2024} MLFF throughout,
+configuring OpenMM simulations with the mixed-precision CUDA platform
+and setting the BAMBOO model's internal data type to fp32.
+All computations were executed on a single NVIDIA L4 GPU.
+The numerical accuracy analysis encompassed three evaluations.
+
+\ifdefined\InlineFloatEnv
+\input{sectbl.10.tex}
+\else\fi
+
+\textbf{Hamiltonian Conservation}
+The time evolution of the Hamiltonian,
+shown in Figure~\ref{fig:drift}, exhibited excellent consistency
+in all eight simulations.
+The system maintained an average total energy of $-2545.1$~kJ/mol
+with a small standard deviation of $0.22$~kJ/mol.
+
+\ifdefined\InlineFloatEnv
+\input{secfig.20.tex}
+\else\fi
+
+\textbf{Trajectory Convergence}
+Figure~\ref{fig:convergence} depicts the differences per time-step
+in potential energy ($U$), kinetic energy ($K$), and Hamiltonian ($H$)
+between the baseline and other implementations.
+The energies maintained convergence throughout the 100 time-steps,
+with numerical differences approaching the theoretical limit of fp32 precision
+(approximately the 6th or 7th significant figure).
+The spatial coordinates, recorded in the PDB format,
+exhibited consistency up to three decimal places
+with a maximum deviation of $0.001$~\AA{} on all trajectories.
+
+\ifdefined\InlineFloatEnv
+\input{secfig.30.tex}
+\else\fi
+
+\textbf{Errors in Forces}
+Using the baseline trajectory, we recalculated the potential energies and forces.
+Figure~\ref{fig:reruns} illustrates the unsigned error in potential energies
+and root mean square deviation (RMSD) of the 27 force components
+relative to the baseline values.
+These results corroborate that the differences are minimal,
+reaching the inherent precision limit of fp32 arithmetic.
+
+\ifdefined\InlineFloatEnv
+\input{secfig.40.tex}
+\else\fi
+
+The comparative performance of the eight strategies is summarized
+in Table~\ref{tb:speed8}.
+Performance benchmarks were conducted
+using a Langevin integrator with a friction
+of $0.1$~ps\textsuperscript{-1} over 1000 time-steps,
+generating 10 trajectory frames.
+For small-scale test cases such as a single ethanol molecule,
+where kernel launch overhead dominates computational cost,
+CUDA Graph significantly enhanced performance.
+Comparisons between implementations 1 and 3, as well as 5 and 7,
+demonstrate that direct inference via C++ APIs achieves superior performance
+with reduced launch overhead compared to their Python counterparts.
+However, these benefits of reduced overhead are expected to diminish
+with increasing system size, a phenomenon previously observed in TorchMD-NET.
+Notably, \texttt{\torchcompile} exhibited significant performance advantages,
+as evidenced by comparisons between implementations 1 and 4,
+and between 5 and 8.
+
+\ifdefined\InlineFloatEnv
+\input{sectbl.20.tex}
+\else\fi

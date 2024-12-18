@@ -1,0 +1,251 @@
+%%
+%% MD Engines and ML Models
+%%
+
+@misc{Gong2024,
+  title      = {{{BAMBOO}}: A Predictive and Transferable Machine Learning Force Field Framework for Liquid Electrolyte Development},
+  shorttitle = {{{BAMBOO}}},
+  author     = {Gong, Sheng and Zhang, Yumin and Mu, Zhenliang and Pu, Zhichen and Wang, Hongyi and Yu, Zhiao and Chen, Mengyi and Zheng, Tianze and Wang, Zhi and Chen, Lifei and Wu, Xiaojie and Shi, Shaochen and Gao, Weihao and Yan, Wen and Xiang, Liang},
+  year       = {2024},
+  doi        = {10.48550/arXiv.2404.07181},
+  url        = {https://arxiv.org/abs/2404.07181},
+  urldate    = {2024-12-08},
+  abstract   = {Despite the widespread applications of machine learning force field (MLFF) on solids and small molecules, there is a notable gap in applying MLFF to complex liquid electrolytes. In this work, we introduce BAMBOO (ByteDance AI Molecular Simulation Booster), a novel framework for molecular dynamics (MD) simulations, with a demonstration of its capabilities in the context of liquid electrolytes for lithium batteries. We design a physics-inspired graph equivariant transformer architecture as the backbone of BAMBOO to learn from quantum mechanical simulations. Additionally, we pioneer an ensemble knowledge distillation approach and apply it on MLFFs to improve the stability of MD simulations. Finally, we propose the density alignment algorithm to align BAMBOO with experimental measurements. BAMBOO demonstrates state-of-the-art accuracy in predicting key electrolyte properties such as density, viscosity, and ionic conductivity across various solvents and salt combinations. Our current model, trained on more than 15 chemical species, achieves the average density error of 0.01 g/cm\${\textasciicircum}3\$ on various compositions compared with experimental data. Moreover, our model demonstrates transferability to molecules not included in the quantum mechanical dataset. We envision this work as paving the way to a "universal MLFF" capable of simulating properties of common organic liquids.},
+  keywords   = {Computational Physics (physics.comp-ph),FOS: Computer and information sciences,FOS: Physical sciences,Machine Learning (cs.LG),Materials Science (cond-mat.mtrl-sci)}
+}
+
+@article{Rackers2018,
+  title   = {Tinker 8: {{Software Tools}} for {{Molecular Design}}},
+  author  = {Rackers, Joshua A. and Wang, Zhi and Lu, Chao and Laury, Marie L. and Lagard{\`e}re, Louis and Schnieders, Michael J. and Piquemal, Jean-Philip and Ren, Pengyu and Ponder, Jay W.},
+  year    = {2018},
+  month   = oct,
+  journal = {Journal of Chemical Theory and Computation},
+  volume  = {14},
+  number  = {10},
+  pages   = {5273--5289},
+  issn    = {1549-9618},
+  doi     = {10.1021/acs.jctc.8b00529},
+  url     = {https://pubs.acs.org/doi/10.1021/acs.jctc.8b00529},
+  urldate = {2023-11-09},
+  langid  = {english}
+}
+
+@misc{Software-Tinker9,
+  title  = {Tinker9: {{Next Generation}} of {{Tinker}} with {{GPU Support}}},
+  author = {Wang, Zhi and Ponder, Jay W.},
+  url    = {https://github.com/TinkerTools/tinker9}
+}
+
+@article{Thompson2022,
+  title   = {{{LAMMPS}} - a Flexible Simulation Tool for Particle-Based Materials Modeling at the Atomic, Meso, and Continuum Scales},
+  author  = {Thompson, Aidan P. and Aktulga, H. Metin and Berger, Richard and Bolintineanu, Dan S. and Brown, W. Michael and Crozier, Paul S. and In 'T Veld, Pieter J. and Kohlmeyer, Axel and Moore, Stan G. and Nguyen, Trung Dac and Shan, Ray and Stevens, Mark J. and Tranchida, Julien and Trott, Christian and Plimpton, Steven J.},
+  year    = {2022},
+  month   = feb,
+  journal = {Computer Physics Communications},
+  volume  = {271},
+  pages   = {108171},
+  issn    = {0010-4655},
+  doi     = {10.1016/j.cpc.2021.108171},
+  url     = {https://linkinghub.elsevier.com/retrieve/pii/S0010465521002836},
+  urldate = {2024-12-08},
+  langid  = {english}
+}
+
+@article{Eastman2024,
+  title      = {{{OpenMM}} 8: {{Molecular Dynamics Simulation}} with {{Machine Learning Potentials}}},
+  shorttitle = {{{OpenMM}} 8},
+  author     = {Eastman, Peter and Galvelis, Raimondas and Pel{\'a}ez, Ra{\'u}l P. and Abreu, Charlles R. A. and Farr, Stephen E. and Gallicchio, Emilio and Gorenko, Anton and Henry, Michael M. and Hu, Frank and Huang, Jing and Kr{\"a}mer, Andreas and Michel, Julien and Mitchell, Joshua A. and Pande, Vijay S. and Rodrigues, Jo{\~a}o PGLM and {Rodriguez-Guerra}, Jaime and Simmonett, Andrew C. and Singh, Sukrit and Swails, Jason and Turner, Philip and Wang, Yuanqing and Zhang, Ivy and Chodera, John D. and De Fabritiis, Gianni and Markland, Thomas E.},
+  year       = {2024},
+  month      = jan,
+  journal    = {The Journal of Physical Chemistry B},
+  volume     = {128},
+  number     = {1},
+  pages      = {109--116},
+  issn       = {1520-6106},
+  doi        = {10.1021/acs.jpcb.3c06662},
+  url        = {https://pubs.acs.org/doi/10.1021/acs.jpcb.3c06662},
+  urldate    = {2024-10-07},
+  langid     = {english}
+}
+
+@misc{Software-OpenMM-Torch,
+  title = {{{OpenMM Torch}}},
+  url   = {https://github.com/openmm/openmm-torch}
+}
+
+@misc{Software-NNPOps,
+  title = {{{NNPOps}}},
+  url   = {https://github.com/openmm/NNPOps}
+}
+
+@article{Pelaez2024,
+  title      = {{{TorchMD-Net}} 2.0: {{Fast Neural Network Potentials}} for {{Molecular Simulations}}},
+  shorttitle = {{{TorchMD-Net}} 2.0},
+  author     = {Pelaez, Raul P. and Simeon, Guillem and Galvelis, Raimondas and Mirarchi, Antonio and Eastman, Peter and Doerr, Stefan and Th{\"o}lke, Philipp and Markland, Thomas E. and De Fabritiis, Gianni},
+  year       = {2024},
+  month      = may,
+  journal    = {Journal of Chemical Theory and Computation},
+  volume     = {20},
+  number     = {10},
+  pages      = {4076--4087},
+  issn       = {1549-9618},
+  doi        = {10.1021/acs.jctc.4c00253},
+  url        = {https://pubs.acs.org/doi/10.1021/acs.jctc.4c00253},
+  urldate    = {2024-10-07},
+  langid     = {english}
+}
+
+@misc{Software-TorchMD-NET,
+  title = {{{TorchMD-NET}}},
+  url   = {https://github.com/torchmd/torchmd-net}
+}
+
+
+%%
+%% PySCF
+%%
+
+@article{Sun2020,
+  title   = {Recent Developments in the {{PySCF}} Program Package},
+  author  = {Sun, Qiming and Zhang, Xing and Banerjee, Samragni and Bao, Peng and Barbry, Marc and Blunt, Nick S. and Bogdanov, Nikolay A. and Booth, George H. and Chen, Jia and Cui, Zhi-Hao and Eriksen, Janus J. and Gao, Yang and Guo, Sheng and Hermann, Jan and Hermes, Matthew R. and Koh, Kevin and Koval, Peter and Lehtola, Susi and Li, Zhendong and Liu, Junzi and Mardirossian, Narbe and McClain, James D. and Motta, Mario and Mussard, Bastien and Pham, Hung Q. and Pulkin, Artem and Purwanto, Wirawan and Robinson, Paul J. and Ronca, Enrico and Sayfutyarova, Elvira R. and Scheurer, Maximilian and Schurkus, Henry F. and Smith, James E. T. and Sun, Chong and Sun, Shi-Ning and Upadhyay, Shiv and Wagner, Lucas K. and Wang, Xiao and White, Alec and Whitfield, James Daniel and Williamson, Mark J. and Wouters, Sebastian and Yang, Jun and Yu, Jason M. and Zhu, Tianyu and Berkelbach, Timothy C. and Sharma, Sandeep and Sokolov, Alexander Yu. and Chan, Garnet Kin-Lic},
+  year    = {2020},
+  month   = jul,
+  journal = {The Journal of Chemical Physics},
+  volume  = {153},
+  number  = {2},
+  pages   = {024109},
+  issn    = {0021-9606, 1089-7690},
+  doi     = {10.1063/5.0006074},
+  url     = {https://pubs.aip.org/jcp/article/153/2/024109/1061482/Recent-developments-in-the-PySCF-program-package},
+  urldate = {2024-12-08},
+  langid  = {english}
+}
+
+
+%%
+%% GPU4PySCF
+%%
+
+@misc{Li2024,
+  title    = {Introducing {{GPU-acceleration}} into the {{Python-based Simulations}} of {{Chemistry Framework}}},
+  author   = {Li, Rui and Sun, Qiming and Zhang, Xing and Chan, Garnet Kin-Lic},
+  year     = {2024},
+  number   = {arXiv:2407.09700},
+  doi      = {10.48550/arXiv.2407.09700},
+  url      = {https://arxiv.org/abs/2407.09700},
+  urldate  = {2024-12-08},
+  keywords = {Chemical Physics (physics.chem-ph),Computational Physics (physics.comp-ph),FOS: Physical sciences,Materials Science (cond-mat.mtrl-sci),Quantum Physics (quant-ph)}
+}
+
+@misc{Wu2024,
+  title         = {Enhancing {{GPU-acceleration}} in the {{Python-based Simulations}} of {{Chemistry Framework}}},
+  author        = {Wu, Xiaojie and Sun, Qiming and Pu, Zhichen and Zheng, Tianze and Ma, Wenzhi and Yan, Wen and Yu, Xia and Wu, Zhengxiao and Huo, Mian and Li, Xiang and Ren, Weiluo and Gong, Sheng and Zhang, Yumin and Gao, Weihao},
+  year          = {2024},
+  month         = jul,
+  number        = {arXiv:2404.09452},
+  eprint        = {2404.09452},
+  primaryclass  = {physics},
+  doi           = {10.48550/arXiv.2404.09452},
+  url           = {http://arxiv.org/abs/2404.09452},
+  urldate       = {2024-12-08},
+  archiveprefix = {arXiv},
+  keywords      = {Physics - Chemical Physics,Physics - Computational Physics,Quantum Physics}
+}
+
+
+%%
+%% libxc
+%%
+
+@article{Lehtola2018,
+  title   = {Recent Developments in Libxc --- {{A}} Comprehensive Library of Functionals for Density Functional Theory},
+  author  = {Lehtola, Susi and Steigemann, Conrad and Oliveira, Micael J.T. and Marques, Miguel A.L.},
+  year    = {2018},
+  month   = jan,
+  journal = {SoftwareX},
+  volume  = {7},
+  pages   = {1--5},
+  issn    = {23527110},
+  doi     = {10.1016/j.softx.2017.11.002},
+  url     = {https://linkinghub.elsevier.com/retrieve/pii/S2352711017300602},
+  urldate = {2024-12-14},
+  langid  = {english}
+}
+
+
+%%
+%% Torch, PyTorch
+%%
+
+@inproceedings{Ansel2024,
+  title      = {{{PyTorch}} 2: {{Faster Machine Learning Through Dynamic Python Bytecode Transformation}} and {{Graph Compilation}}},
+  shorttitle = {{{PyTorch}} 2},
+  booktitle  = {Proceedings of the 29th {{ACM International Conference}} on {{Architectural Support}} for {{Programming Languages}} and {{Operating Systems}}, {{Volume}} 2},
+  author     = {Ansel, Jason and Yang, Edward and He, Horace and Gimelshein, Natalia and Jain, Animesh and Voznesensky, Michael and Bao, Bin and Bell, Peter and Berard, David and Burovski, Evgeni and Chauhan, Geeta and Chourdia, Anjali and Constable, Will and Desmaison, Alban and DeVito, Zachary and Ellison, Elias and Feng, Will and Gong, Jiong and Gschwind, Michael and Hirsh, Brian and Huang, Sherlock and Kalambarkar, Kshiteej and Kirsch, Laurent and Lazos, Michael and Lezcano, Mario and Liang, Yanbo and Liang, Jason and Lu, Yinghai and Luk, C. K. and Maher, Bert and Pan, Yunjie and Puhrsch, Christian and Reso, Matthias and Saroufim, Mark and Siraichi, Marcos Yukio and Suk, Helen and Zhang, Shunting and Suo, Michael and Tillet, Phil and Zhao, Xu and Wang, Eikan and Zhou, Keren and Zou, Richard and Wang, Xiaodong and Mathews, Ajit and Wen, William and Chanan, Gregory and Wu, Peng and Chintala, Soumith},
+  year       = {2024},
+  month      = apr,
+  pages      = {929--947},
+  publisher  = {ACM},
+  address    = {La Jolla CA USA},
+  doi        = {10.1145/3620665.3640366},
+  url        = {https://dl.acm.org/doi/10.1145/3620665.3640366},
+  urldate    = {2024-10-07},
+  isbn       = {979-8-4007-0385-0},
+  langid     = {english}
+}
+
+@misc{Docs-torch.compile,
+  title = {{{PyTorch Docs}}: Torch.Compile},
+  url   = {https://pytorch.org/docs/stable/torch.compiler.html}
+}
+
+@misc{Docs-TorchScript,
+  title = {{{PyTorch Docs}}: {{TorchScript}}},
+  url   = {https://pytorch.org/docs/stable/jit.html}
+}
+
+
+%%
+%% Python C-API
+%%
+
+@misc{Software-Python-C-API,
+  title = {Python/{{C API Reference Manual}}},
+  url   = {https://docs.python.org/3/c-api/index.html}
+}
+
+
+%%
+%% pybind11
+%%
+
+@misc{Software-pybind11,
+  title  = {Pybind11 -- {{Seamless}} Operability between {{C}}++11 and {{Python}}},
+  author = {Jakob, Wenzel and Rhinelander, Jason and Moldovan, Dean},
+  year   = {2017},
+  url    = {https://github.com/pybind/pybind11}
+}
+
+@misc{Software-pybind11-embed,
+  title = {Pybind11 Documentation: {{Embedding}} the Interpreter},
+  url   = {https://pybind11.readthedocs.io/en/stable/advanced/embedding.html}
+}
+
+
+%%
+%% SWIG
+%%
+
+@inproceedings{Beazley1996,
+  title     = {{{SWIG}} : {{An Easy}} to {{Use Tool For Integrating Scripting Languages}} with {{C}} and {{C}}++},
+  booktitle = {Proceedings of the {{USENIX Fourth Annual Tcl}}/{{Tk Workshop}}},
+  author    = {Beazley, David M.},
+  year      = {1996},
+  address   = {Monterey, California},
+  url       = {https://www.usenix.org/legacy/publications/library/proceedings/tcl96/full_papers/beazley/index.html}
+}
+
+@misc{Software-SWIG,
+  title = {{{SWIG}}},
+  url   = {https://www.swig.org}
+}

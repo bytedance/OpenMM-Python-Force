@@ -1,0 +1,6 @@
+$pdf_mode = 1;
+$mainfile = 'src.tex';
+$pdflatex = 'pdflatex -synctex=1 -interaction=nonstopmode %O %S';
+$bibtex_use = 2;
+
+@generated_exts = qw(aux fls log out toc bbl blg synctex.gz);

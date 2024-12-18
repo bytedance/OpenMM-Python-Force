@@ -1,0 +1,64 @@
+\section{Introduction}
+
+Modern computational scientific research is standing at the intersection
+of two distinct technical domains:
+molecular dynamics (MD) simulation and machine learning (ML).
+These fields have evolved along different technological paths,
+with MD engines predominantly built on C-family languages
+utilizing ahead-of-time (AOT) compilation,
+while the ML ecosystem has consolidated around Python,
+particularly the PyTorch framework.
+This technological divergence creates significant challenges for researchers
+seeking to integrate these paradigms effectively.
+
+The incorporation of pre-trained ML models into MD simulations
+has primarily relied on \texttt{\torchjit},
+which generates TorchScript graphs through static analysis
+and Python Abstract Syntax Tree parsing.
+While this approach enables just-in-time (JIT) optimizations
+and provides essential C++ APIs\textemdash{}exemplified by implementations
+like OpenMM Torch\cite{Eastman2024,Software-OpenMM-Torch}\textemdash{}it imposes considerable limitations
+by supporting only a restricted subset of Python syntax.
+These constraints are substantial in practice,
+with approximately 50\% of real-world models failing to compile successfully
+using \texttt{\torchjit} \cite{Ansel2024}.
+
+Recent advances have introduced various strategies
+to enhance both training and inference performance of ML models.
+CUDA 12's Graph functionality enables the recording
+and efficient replay of CUDA kernel sequences
+to reduce kernel launch overheads.
+For cases with well-identified computational bottlenecks,
+hand-optimized CUDA operators remain an effective optimization strategy.
+Projects like NNPOps \cite{Eastman2024,Software-NNPOps} demonstrate this approach
+by providing specialized operators for tasks
+such as Particle Mesh Ewald calculations and neighbor list construction.
+PyTorch 2.0's \texttt{\torchcompile} \cite{Ansel2024} marks a significant breakthrough,
+particularly valuable for non-obvious performance bottlenecks.
+The latter employs a frontend that extracts PyTorch operations
+from Python bytecode to construct FX graphs,
+which are then processed by a compiler backend
+generating Triton code for CUDA execution.
+This approach substantially relaxes Python syntax restrictions
+while enabling sophisticated optimizations such as kernel fusion.
+Moreover, it can modify the bytecode to incorporate AOT-compiled kernels.
+The efficacy of these optimizations is evidenced
+by frameworks such as TorchMD-NET \cite{Pelaez2024},
+which has achieved significant performance improvements
+in their training pipeline.
+
+Despite its promising capabilities,
+\texttt{\torchcompile} has not yet achieved widespread adoption
+in molecular dynamics simulations,
+primarily due to its lack of native C++ support.
+This paper addresses this limitation through three steps.
+First, we present a general callback mechanism that enables any Python module
+to serve as a gradient provider for MD simulations.
+Second, we validate this approach through rigorous numerical testing and
+performance profiling in gas-phase simulations,
+demonstrating both its numerical accuracy and computational efficiency.
+Finally, we demonstrate the broad applicability of this approach
+through its implementation in ab initio molecular dynamics (AIMD) simulations
+and explore its portability to other MD engines,
+illustrating how our solution provides a generic and seamless integration
+between Python modules and MD simulations.

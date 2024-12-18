@@ -1,0 +1,103 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.27)
+
+SET(COMPILE_TORCH_FORCE ON CACHE BOOL "Compile Torch Force")
+SET(USE_CXX11_ABI "NOTSET" CACHE STRING "OFF: use older ABI; ON: use C++11 ABI")
+
+# find python3
+SET(Python3_EXECUTABLE "python3" CACHE FILEPATH "Python3 executable")
+
+# find openmm
+EXECUTE_PROCESS(
+  COMMAND "${Python3_EXECUTABLE}" -c "import os; import openmm; print(os.path.dirname(openmm.version.openmm_library_path), end='')"
+  OUTPUT_VARIABLE OPENMM_DIR
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+# find swig
+FIND_PROGRAM(SWIG_EXECUTABLE swig REQUIRED)
+
+# find pybind11
+EXECUTE_PROCESS(
+  COMMAND "${Python3_EXECUTABLE}" -m pybind11 --cmakedir
+  OUTPUT_VARIABLE pybind11_DIR
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+IF(COMPILE_TORCH_FORCE)
+  # find torch
+  EXECUTE_PROCESS(
+    COMMAND "${Python3_EXECUTABLE}" -c "import torch; print(torch.utils.cmake_prefix_path, end='')"
+    OUTPUT_VARIABLE PYTORCH_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  LIST(APPEND CMAKE_PREFIX_PATH "${PYTORCH_DIR}")
+  # pybind11 is included in torch
+  SET(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ standard")
+ELSE()
+  SET(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ standard")
+ENDIF()
+SET(CMAKE_CXX_EXTENSIONS OFF CACHE BOOL "C++ extensions")
+
+SET(CMAKE_BUILD_TYPE Release CACHE STRING "Build type: Release, Debug, RelWithDebInfo, MinSizeRel")
+SET(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Export compile_commands.json")
+SET(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Verbose makefile output")
+SET(CMAKE_INSTALL_PREFIX "${OPENMM_DIR}" CACHE PATH "Install prefix")
+IF(APPLE)
+  SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+ENDIF()
+
+# project
+PROJECT(CallbackPyForce LANGUAGES CXX)
+FIND_PACKAGE(Python3 REQUIRED COMPONENTS Development NumPy)
+FIND_PACKAGE(pybind11 REQUIRED)
+IF(COMPILE_TORCH_FORCE)
+  FIND_PACKAGE(Torch REQUIRED)
+  ADD_COMPILE_DEFINITIONS(-DCOMPILE_TORCH_FORCE=1)
+ELSE()
+  ADD_COMPILE_DEFINITIONS(-DCOMPILE_TORCH_FORCE=0)
+ENDIF()
+IF(NOT USE_CXX11_ABI STREQUAL "NOTSET")
+  IF(NOT USE_CXX11_ABI)
+    ADD_COMPILE_DEFINITIONS(-D_GLIBCXX_USE_CXX11_ABI=0)
+  ELSE()
+    ADD_COMPILE_DEFINITIONS(-D_GLIBCXX_USE_CXX11_ABI=1)
+  ENDIF()
+ENDIF()
+FIND_PACKAGE(CUDAToolkit)
+INCLUDE(../clbk/cmake/path.cmake)
+
+SET(LIB_NAME "CallbackPyForce")
+SET(MODULE_NAME "CallbackPyForce")
+ADD_SUBDIRECTORY(openmmapi)
+ADD_SUBDIRECTORY(platforms/reference)
+IF(CUDAToolkit_FOUND)
+  ADD_SUBDIRECTORY(platforms/cuda)
+ELSE()
+  MESSAGE(STATUS "CUDAToolkit not found. Skip building 'platforms/cuda'.")
+ENDIF()
+ADD_SUBDIRECTORY(python)
+
+ADD_CUSTOM_TARGET(copy_test
+COMMAND
+  ${CMAKE_COMMAND} -E create_symlink "${CMAKE_SOURCE_DIR}/test" "${CMAKE_CURRENT_BINARY_DIR}/test"
+)
+
+# PythonInstall and wheel
+CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/python/setup.py" "${CMAKE_BINARY_DIR}/python/setup.py")
+ADD_CUSTOM_TARGET(PythonInstall
+COMMAND
+  "${Python3_EXECUTABLE}" -m pip install ./python
+DEPENDS
+  libSwig
+)
+ADD_CUSTOM_TARGET(wheel
+COMMAND
+  "${Python3_EXECUTABLE}" -m pip wheel ./python
+DEPENDS
+  libSwig
+  copy_test
+)
+SET_TARGET_PROPERTIES(copy_test PythonInstall wheel
+PROPERTIES
+  EXCLUDE_FROM_ALL TRUE
+)

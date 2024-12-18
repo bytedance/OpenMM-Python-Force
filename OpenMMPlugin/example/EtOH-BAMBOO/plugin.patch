@@ -1,0 +1,140 @@
+diff --git a/models/bamboo_base.py b/models/bamboo_base.py
+index 1aa2876..5aa2d4a 100644
+--- a/models/bamboo_base.py
++++ b/models/bamboo_base.py
+@@ -19,7 +19,7 @@ from typing import Dict, List, Optional
+ 
+ import torch
+ import torch.nn as nn
+-from torch_runstats.scatter import scatter
++from utils.scatter import scatter
+ 
+ from utils.constant import (debye_ea, ele_factor, element_c6, element_r0,
+                             ewald_a, ewald_f, ewald_p, nelems)
+@@ -179,19 +179,19 @@ class BambooBase(torch.nn.Module):
+         # predict charge from atom embeddings and normalize the charges
+         charge = self.charge_mlp(node_feat).squeeze(-1) 
+         charge = self.charge_ub * torch.tanh(charge / self.charge_ub) # an upper bound of atomic partial charge 
+-        sum_charge = scatter(charge, inputs['mol_ids'], dim=0, dim_size=self.nmol) 
+-        natoms = scatter(torch.ones_like(inputs['mol_ids'], dtype=torch.float32), inputs['mol_ids'], dim=0, dim_size=self.nmol) 
++        sum_charge = torch.sum(charge)
++        natoms = len(charge)
+         diff_charge = (inputs['total_charge'] - sum_charge)/natoms 
+-        pred_charge = charge + torch.gather(diff_charge, 0, inputs['mol_ids']) # make sure summation of charges is preserved
++        pred_charge = charge + diff_charge[0]
+ 
+         # compute electronegativity energy
+         electronegativity_energy = pred_electronegativity**2 * pred_charge + \
+                                    pred_electronegativity_hardness**2 * pred_charge * pred_charge #using physical electronegative value "en_value" as starting point
+-        electronegativity_energy = scatter(electronegativity_energy, inputs['mol_ids'], dim=0, dim_size=self.nmol)
++        electronegativity_energy = torch.sum(electronegativity_energy)
+ 
+         # predict NN energy
+         energy = self.energy_mlp(node_feat).squeeze(-1) 
+-        nn_energy = scatter(energy, inputs['mol_ids'], dim=0, dim_size=self.nmol) 
++        nn_energy = torch.sum(energy)
+ 
+         return nn_energy, pred_charge, electronegativity_energy
+ 
+@@ -328,28 +328,16 @@ class BambooBase(torch.nn.Module):
+         self.nmol = 1
+         inputs['total_charge'] = torch.zeros(1, dtype=torch.float32, device=self.device)
+         inputs['mol_ids'] = torch.zeros(natoms, dtype=torch.long, device=self.device)
+-        row, col = inputs['edge_index'][0], inputs['edge_index'][1]
+         inputs['edge_cell_shift'].requires_grad_(True) # Ne
+ 
+         # NN inference
+         nn_energy, pred_charge, electronegativity_energy = self.energy_nn(inputs) # 1, Na
+-        
+-        # comute NN atom forces and virial
+-        grad_outputs : Optional[List[Optional[torch.Tensor]]] = [ torch.ones_like(nn_energy) ]
+-        nn_fij = torch.autograd.grad([nn_energy], [inputs['edge_cell_shift']], grad_outputs=grad_outputs, create_graph=True, allow_unused=True)[0] 
+-        if nn_fij is None: # used for torch.jit.script
+-            nn_fij_cast = torch.zeros(size=inputs['edge_cell_shift'].size(), device=self.device)
+-        else:
+-            nn_fij_cast = -1.0 * nn_fij
+-        nn_forces = scatter(nn_fij_cast, row, dim=0, dim_size=natoms) - scatter(nn_fij_cast, col, dim=0, dim_size=natoms) 
+-        nn_virial = torch.sum(nn_fij_cast.unsqueeze(-2) * inputs['edge_cell_shift'].unsqueeze(-1), dim=0) 
++
+ 
+         # Coulomb energy, force and virial within cutoff
+         row_coul, col_coul = inputs['coul_edge_index'][0], inputs['coul_edge_index'][1]
+         ecoul, coul_fij = self.get_coulomb(row_coul, col_coul, inputs['coul_edge_cell_shift'], pred_charge, g_ewald=inputs['g_ewald'])
+         coul_energy = 0.5 * torch.sum(ecoul) 
+-        coul_forces = scatter(coul_fij, row_coul, dim=0, dim_size=natoms) 
+-        coul_virial = 0.5 * torch.sum(coul_fij.unsqueeze(-2) * inputs['coul_edge_cell_shift'].unsqueeze(-1), dim=0)
+         
+         # dispersion energy, force and virial within cutoff
+         row_disp, col_disp = inputs['disp_edge_index'][0], inputs['disp_edge_index'][1] 
+@@ -357,19 +345,13 @@ class BambooBase(torch.nn.Module):
+         r0 = self.r0_emb(inputs['atom_types']).squeeze(-1)
+         edisp, disp_fij = self.get_dispersion(row_disp, col_disp, inputs['disp_edge_cell_shift'], c6, r0)
+         disp_energy = 0.5 * torch.sum(edisp) 
+-        disp_forces = scatter(disp_fij, row_disp, dim=0, dim_size=natoms) 
+-        disp_virial = 0.5 * torch.sum(disp_fij.unsqueeze(-2) * inputs['disp_edge_cell_shift'].unsqueeze(-1), dim=0) 
+             
+         # prepare output dictionary and convert back to float64
+         outputs = dict()
+         outputs['pred_energy'] = nn_energy + coul_energy + disp_energy + electronegativity_energy 
+-        outputs['pred_forces'] = nn_forces + coul_forces + disp_forces 
+-        outputs['pred_virial'] = nn_virial + coul_virial + disp_virial 
+         outputs['pred_coul_energy'] = coul_energy
+         outputs['pred_charge'] = pred_charge
+ 
+-        if 'edge_outer_mask' in inputs.keys():
+-            outputs['nn_virial_outer'] = torch.sum(torch.sum(nn_fij_cast * inputs['edge_cell_shift'], dim=-1) * inputs['edge_outer_mask'])
+ 
+         for k, v in outputs.items():
+             outputs[k] = v.to(torch.float64)
+diff --git a/models/bamboo_get.py b/models/bamboo_get.py
+index fa7f4dc..9a5c352 100644
+--- a/models/bamboo_get.py
++++ b/models/bamboo_get.py
+@@ -19,7 +19,7 @@ from typing import List
+ 
+ import torch
+ import torch.nn as nn
+-from torch_runstats.scatter import scatter
++from utils.scatter import scatter
+ 
+ from models.bamboo_base import BambooBase
+ 
+diff --git a/utils/scatter.py b/utils/scatter.py
+new file mode 100644
+index 0000000..8e3bb0d
+--- /dev/null
++++ b/utils/scatter.py
+@@ -0,0 +1,33 @@
++from typing import Optional
++
++import torch
++
++
++def _broadcast(src: torch.Tensor, other: torch.Tensor, dim: int):
++    if dim < 0:
++        dim = other.dim() + dim
++    if src.dim() == 1:
++        for _ in range(0, dim):
++            src = src.unsqueeze(0)
++    for _ in range(src.dim(), other.dim()):
++        src = src.unsqueeze(-1)
++    src = src.expand_as(other)
++    return src
++
++
++def scatter(
++    src: torch.Tensor,
++    index: torch.Tensor,
++    dim: int = -1,
++    dim_size: Optional[int] = None,
++) -> torch.Tensor:
++    index = _broadcast(index, src, dim)
++    size = list(src.size())
++    if dim_size is not None:
++        size[dim] = dim_size
++    elif index.numel() == 0:
++        size[dim] = 0
++    else:
++        size[dim] = int(index.max()) + 1
++    out = torch.zeros(size, dtype=src.dtype, device=src.device)
++    return out.scatter_add_(dim, index, src)
