@@ -22,9 +22,10 @@ add_kwarg(kwarg: str) -> None
     Add a keyword argument in addition to the default coordinate argument.
 
     Currently supported kwargs:
-    - cell: torch.Tensor of shape (3,3), representing [ax,ay,az,bx,by,bz,cx,cy,cz] when reshaped to (9,).
+    - cell (shape (3,3)): Representing [ax,ay,az,bx,by,bz,cx,cy,cz] when reshaped to (9,).
     - includeForces (bool): If the underlying callable supports energy-only calculations,
-        using this kwarg to skip the computation of forces or gradients.
+        using this kwarg to allow OpenMM to skip the computation of forces or gradients
+        at its discretion.
     """
 ```
 
