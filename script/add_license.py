@@ -6,6 +6,11 @@ import os
 import re
 
 
+def mit_spdx_license_identifier_template():
+    return """Copyright (c) {year} {copyright_holders}
+SPDX-License-Identifier: MIT"""
+
+
 def mit_license_template():
     return """MIT License
 
@@ -31,19 +36,17 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."""
 
 
-def mit_license(year: str = "2024--present", copyright_holders: str = "ByteDance Ltd. and/or its affiliates"):
-    return mit_license_template().format(year=year, copyright_holders=copyright_holders)
+def mit_licenses(year: str = "2024--present", copyright_holders: str = "ByteDance Ltd. and/or its affiliates"):
+    mit_full = mit_license_template().format(year=year, copyright_holders=copyright_holders)
+    mitshort = mit_spdx_license_identifier_template().format(year=year, copyright_holders=copyright_holders)
+    return mit_full, mitshort
 
 
 def extra_paragraphs():
-    return """The license for this source file is stated above. This paragraph and
-the following one are not part of the license statement.
-
-The file doc/CREDITS.txt lists serval external projects and their
-licenses, which served as valuable guidance for this project. Although
-not all of these projects are directly referenced in every source
-file, this source file complies with the licenses of all listed
-projects."""
+    return """The file doc/CREDITS.txt lists serval external projects which served
+as valuable guidance for this project. Although not all of these
+projects are directly referenced in every source file, this source file
+complies with all of their licenses."""
 
 
 def replace_paragraph(content: str, start: str, end: str, replace: str):
@@ -58,16 +61,13 @@ def replace_paragraph(content: str, start: str, end: str, replace: str):
 def to_cxx(sections: list[str]):
     line0 = "/* -------------------------------------------------------------------------- *"
     lineD = " * -------------------------------------------------------------------------- *"
-    lineE = " *                                                                            *"
     line1 = " * -------------------------------------------------------------------------- */"
 
     new_lines = []
     new_lines.append(line0)
     for idx, s in enumerate(sections):
         if idx > 0:
-            new_lines.append(lineE)
             new_lines.append(lineD)
-            new_lines.append(lineE)
         lines = s.split("\n")
         assert len(line1) - len(line0) == 1
         for l in lines:
@@ -98,19 +98,19 @@ def get_files2():
 
 
 def mainfunc():
-    license_str = mit_license()
+    license_full, license_short = mit_licenses()
     extra_str = extra_paragraphs()
     files1 = get_files1()
     files2 = get_files2()
 
     file0 = current_dir() + "/../LICENSE"
     with open(file0, "w") as fw:
-        fw.write(license_str + "\n")
+        fw.write(license_full + "\n")
 
     for f in files1:
         with open(f) as fr:
             content = fr.read()
-            l, l0, l1 = to_cxx([license_str])
+            l, l0, l1 = to_cxx([license_short])
             new_content = replace_paragraph(content, l0, l1, l)
         with open(f, "w") as fw:
             fw.write(new_content)
@@ -118,7 +118,7 @@ def mainfunc():
     for f in files2:
         with open(f) as fr:
             content = fr.read()
-            l, l0, l1 = to_cxx([license_str, extra_str])
+            l, l0, l1 = to_cxx([license_short, extra_str])
             new_content = replace_paragraph(content, l0, l1, l)
         with open(f, "w") as fw:
             fw.write(new_content)
