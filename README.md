@@ -49,10 +49,16 @@ omm_system.addForce(cbtf)
 Tests
 -----
 
+All tests passes in the following development environment
+- Python 3.9.2
+- torch 2.4.1+cu121
+- gcc (Debian 10.2.1-6) 10.2.1 20210110
+
 Unit tests depend on `make install` and `make wheel`. Fortunately, they do not require `make PythonInstall`. Tests can be executed using the following commands:
 ```bash
 cd /path/to/build-dir
-make install wheel
+make install
+make wheel
 python3 -m pytest -vv -s test
 ```
 
