@@ -43,7 +43,7 @@ def mit_licenses(year: str = "2024--present", copyright_holders: str = "ByteDanc
 
 
 def extra_paragraphs():
-    return """The file doc/CREDITS.txt lists serval external projects which served
+    return """The file doc/CREDITS.txt lists several external projects which served
 as valuable guidance for this project. Although not all of these
 projects are directly referenced in every source file, this source file
 complies with all of their licenses."""
