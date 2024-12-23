@@ -49,7 +49,7 @@ omm_system.addForce(cbtf)
 Tests
 -----
 
-All tests passes in the following development environment
+All tests passed in the following development environment
 - Python 3.9.2
 - torch 2.4.1+cu121
 - gcc (Debian 10.2.1-6) 10.2.1 20210110
